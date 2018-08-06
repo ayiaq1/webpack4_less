@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 // postcss 配置文件
 const postcssConfig = path.resolve(__dirname, 'postcss.config.js');
 // 生产构建输出目录
@@ -17,7 +18,11 @@ const getPlugins = function() {
     const plugins = [
         new CleanWebpackPlugin(outputDir, { allowExternal: true }),
         new ProgressBarPlugin(),
-        new ExtractTextPlugin('./css/index.css'),
+        new ExtractTextPlugin('css/[name].[hash:9].css'),
+        new CopyWebpackPlugin([{
+            from: path.resolve(__dirname, '../src/static'),
+            to: outputDir+'/static'
+        }])
     ];
     const glob = require('glob').Glob;
     const files = new glob("src/template/*.html", { sync: true });
